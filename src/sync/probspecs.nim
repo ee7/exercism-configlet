@@ -19,11 +19,8 @@ proc execCmdException*(cmd: string, message: string) =
   if execCmd(cmd) != 0:
     quit(message)
 
-proc probSpecsDir: string =
-  getCurrentDir() / ".problem-specifications"
-
-proc initProbSpecsRepo: ProbSpecsRepo =
-  result.dir = probSpecsDir()
+proc initProbSpecsRepo(dir: string): ProbSpecsRepo =
+  result.dir = dir / ".problem-specifications"
 
 proc clone(repo: ProbSpecsRepo) =
   let cmd = &"git clone --quiet --depth 1 https://github.com/exercism/problem-specifications.git {repo.dir}"
@@ -167,12 +164,12 @@ proc validate(probSpecsRepo: ProbSpecsRepo) =
 
 proc findProbSpecsExercises*(conf: Conf): seq[ProbSpecsExercise] =
   if conf.action.probSpecsDir.len > 0:
-    let probSpecsRepo = ProbSpecsRepo(dir: conf.action.probSpecsDir)
+    let probSpecsRepo = initProbSpecsRepo(conf.action.probSpecsDir)
     if not conf.action.offline:
       probSpecsRepo.validate()
     result = probSpecsRepo.findProbSpecsExercises(conf)
   else:
-    let probSpecsRepo = initProbSpecsRepo()
+    let probSpecsRepo = initProbSpecsRepo(conf.trackDir)
     try:
       probSpecsRepo.remove()
       probSpecsRepo.clone()
