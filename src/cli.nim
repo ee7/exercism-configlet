@@ -14,6 +14,7 @@ type
 
   ActionKind* = enum
     actNil = "nil"
+    actInfo = "info"
     actLint = "lint"
     actSync = "sync"
     actUuid = "uuid"
@@ -21,6 +22,8 @@ type
   Action* = object
     case kind*: ActionKind
     of actNil:
+      discard
+    of actInfo:
       discard
     of actLint:
       discard
@@ -154,7 +157,7 @@ func genHelpText: string =
 
   var optSeen: set[Opt] = {}
   for actionKind in ActionKind:
-    if actionKind notin {actNil, actLint}:
+    if actionKind notin {actNil, actInfo, actLint}:
       result &= &"\nOptions for {actionKind}:\n"
       let action = Action(kind: actionKind)
       for key, val in fieldPairs(action):
@@ -210,6 +213,8 @@ func formatOpt(kind: CmdLineKind, key: string, val = ""): string =
 func initAction*(actionKind: ActionKind, probSpecsDir = ""): Action =
   case actionKind
   of actNil:
+    Action(kind: actionKind)
+  of actInfo:
     Action(kind: actionKind)
   of actLint:
     Action(kind: actionKind)
@@ -329,6 +334,8 @@ proc handleOption(conf: var Conf; kind: CmdLineKind; key, val: string) =
     case conf.action.kind
     of actNil:
       discard
+    of actInfo:
+      discard
     of actLint:
       discard
     of actSync:
@@ -381,11 +388,9 @@ proc processCmdLine*: Conf =
   case result.action.kind
   of actNil:
     showHelp()
-  of actLint:
+  of actInfo, actLint, actUuid:
     discard
   of actSync:
     if result.action.offline and result.action.probSpecsDir.len == 0:
       showError(&"'{list(optSyncOffline)}' was given without passing " &
                 &"'{list(optSyncProbSpecsDir)}'")
-  of actUuid:
-    discard
