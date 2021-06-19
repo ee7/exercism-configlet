@@ -121,12 +121,13 @@ Checking exercises...
 [warn] some exercises are missing test cases
 """
 
-    test "`sync --update --mode=include` exits with 0 and includes the expected test cases":
+    test "`sync --update --mode=include --tests` exits with 0 and includes the expected test cases":
       execAndCheck(0):
-        execCmdEx(&"{binaryPath} -t {trackDir} sync --update -mi -o -p {psDir}")
+        execCmdEx(&"{binaryPath} -t {trackDir} sync --update -mi -o -p {psDir} --tests")
 
       check outp == """
-Syncing exercises...
+Checking exercises...
+Updating tests...
 [info] anagram: included 1 missing test case
 [info] diffie-hellman: included 1 missing test case
 [info] grade-school: included 1 missing test case
@@ -137,7 +138,7 @@ Syncing exercises...
 [info] luhn: included 1 missing test case
 [info] prime-factors: included 5 missing test cases
 [info] react: included 14 missing test cases
-All exercises are synced!
+All tests are up to date!
 """
 
     const expectedDiffOutput = """
@@ -456,13 +457,14 @@ All exercises are synced!
 
       check outp.conciseDiff() == expectedDiffOutput
 
-    test "after syncing, another `sync --update --mode=include` performs no changes":
+    test "after syncing, another `sync --update --mode=include --tests` performs no changes":
       execAndCheck(0):
-        execCmdEx(&"{binaryPath} -t {trackDir} sync --update -mi -o -p {psDir}")
+        execCmdEx(&"{binaryPath} -t {trackDir} sync --update -mi -o -p {psDir} --tests")
 
       check outp == """
-Syncing exercises...
-All exercises are synced!
+Checking exercises...
+Updating tests...
+All tests are up to date!
 """
 
     test "after syncing, a `sync` without `--update` shows that tests are up to date":
