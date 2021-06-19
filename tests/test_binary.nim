@@ -65,6 +65,8 @@ proc testsForSync(binaryPath: string) =
 
       check outp == """
 Checking exercises...
+[warn] hamming: instructions.md is unsynced
+[warn] yacht: instructions.md is unsynced
 [warn] anagram: missing 1 test case
        - detects two anagrams (03eb9bbe-8906-4ea0-84fa-ffe711b52c8b)
 [warn] diffie-hellman: missing 1 test case
@@ -115,6 +117,7 @@ Checking exercises...
        - removing a callback multiple times doesn't interfere with other callbacks (f2a7b445-f783-4e0e-8393-469ab4915f2a)
        - callbacks should only be called once even if multiple dependencies change (daf6feca-09e0-4ce5-801d-770ddfe1c268)
        - callbacks should not be called if dependencies change but output value doesn't change (9a5b159f-b7aa-4729-807e-f1c38a46d377)
+[warn] some exercises have unsynced docs
 [warn] some exercises are missing test cases
 """
 
@@ -462,12 +465,14 @@ Syncing exercises...
 All exercises are synced!
 """
 
-    test "after syncing, a `sync` without `--update` shows that exercises are up to date":
-      execAndCheck(0):
+    test "after syncing, a `sync` without `--update` shows that tests are up to date":
+      execAndCheck(1):
         execCmdEx(&"{binaryPath} -t {trackDir} sync -o -p {psDir}")
       check outp == """
 Checking exercises...
-All exercises are up-to-date!
+[warn] hamming: instructions.md is unsynced
+[warn] yacht: instructions.md is unsynced
+[warn] some exercises have unsynced docs
 """
 
     test "the `git diff` output is still the same":
