@@ -17,7 +17,7 @@ proc main =
       quit(1)
 
     let conf = Conf(
-      action: initAction(actSync),
+      action: initAction(actSync, scope = {skTests}),
       trackDir: trackDir,
     )
     let practiceExercises = toSeq findPracticeExercises(conf)
