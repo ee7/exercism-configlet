@@ -52,7 +52,7 @@ proc testsForSync(binaryPath: string) =
     # Setup: set the problem-specifications repo to a known state
     block:
       execAndCheck(0):
-        execCmdEx(&"git -C {psDir} checkout f17f457fdc0673369047250f652e93c7901755e1")
+        execCmdEx(&"git -C {psDir} checkout daf620d47ed905409564dec5fa9610664e294bde")
 
     # Setup: set the track repo to a known state
     block:
@@ -67,6 +67,20 @@ proc testsForSync(binaryPath: string) =
 Checking exercises...
 [warn] hamming: instructions.md is unsynced
 [warn] yacht: instructions.md is unsynced
+[warn] acronym: metadata is unsynced
+[warn] armstrong-numbers: metadata is unsynced
+[warn] binary: metadata is unsynced
+[warn] collatz-conjecture: metadata is unsynced
+[warn] darts: metadata is unsynced
+[warn] grade-school: metadata is unsynced
+[warn] hello-world: metadata is unsynced
+[warn] high-scores: metadata is unsynced
+[warn] resistor-color: metadata is unsynced
+[warn] reverse-string: metadata is unsynced
+[warn] scale-generator: metadata is unsynced
+[warn] twelve-days: metadata is unsynced
+[warn] two-fer: metadata is unsynced
+[warn] yacht: metadata is unsynced
 [warn] anagram: missing 1 test case
        - detects two anagrams (03eb9bbe-8906-4ea0-84fa-ffe711b52c8b)
 [warn] diffie-hellman: missing 1 test case
@@ -118,6 +132,7 @@ Checking exercises...
        - callbacks should only be called once even if multiple dependencies change (daf6feca-09e0-4ce5-801d-770ddfe1c268)
        - callbacks should not be called if dependencies change but output value doesn't change (9a5b159f-b7aa-4729-807e-f1c38a46d377)
 [warn] some exercises have unsynced docs
+[warn] some exercises have unsynced metadata
 [warn] some exercises are missing test cases
 """
 
@@ -474,7 +489,22 @@ All tests are up to date!
 Checking exercises...
 [warn] hamming: instructions.md is unsynced
 [warn] yacht: instructions.md is unsynced
+[warn] acronym: metadata is unsynced
+[warn] armstrong-numbers: metadata is unsynced
+[warn] binary: metadata is unsynced
+[warn] collatz-conjecture: metadata is unsynced
+[warn] darts: metadata is unsynced
+[warn] grade-school: metadata is unsynced
+[warn] hello-world: metadata is unsynced
+[warn] high-scores: metadata is unsynced
+[warn] resistor-color: metadata is unsynced
+[warn] reverse-string: metadata is unsynced
+[warn] scale-generator: metadata is unsynced
+[warn] twelve-days: metadata is unsynced
+[warn] two-fer: metadata is unsynced
+[warn] yacht: metadata is unsynced
 [warn] some exercises have unsynced docs
+[warn] some exercises have unsynced metadata
 """
 
     test "the `git diff` output is still the same":
