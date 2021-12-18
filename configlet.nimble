@@ -38,3 +38,10 @@ task test, "Runs the test suite":
 
 before build:
   ensureThatNimblePackagesArePatched()
+
+# Strip the binary when it is produced by `zig cc`.
+when defined(linux):
+  after build:
+    if existsEnv("GITHUB_ACTIONS") and findExe("zigcc").len > 0:
+      echo "stripping binary..."
+      exec "strip -s ./configlet"
