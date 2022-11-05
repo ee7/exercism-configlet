@@ -19,15 +19,19 @@ jobs:
         include:
           - os: linux
             runs-on: ubuntu-22.04
-            arch: 64bit
+            arch: x86_64
 
           - os: mac
             runs-on: macos-12
-            arch: 64bit
+            arch: x86_64
 
           - os: windows
             runs-on: windows-2022
-            arch: 64bit
+            arch: x86_64
+
+          - os: linux
+            runs-on: ubuntu-22.04
+            arch: cross-compile
 
     name: "${{ matrix.os }}-${{ matrix.arch }}"
     runs-on: ${{ matrix.runs-on }}
@@ -35,9 +39,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
 
-      - name: On Linux, install Zig
-        if: matrix.os == 'linux'
-        run: ./.github/bin/linux-install-build-tools
+      - name: On Linux, when not cross-compiling, install musl
+        if: matrix.os == 'linux' && matrix.arch == 'x86_64'
+        run: ./.github/bin/linux-install-musl
+
+      - name: On Linux, when cross-compiling, install Zig
+        if: matrix.os == 'linux' && matrix.arch == 'cross-compile'
+        run: ./.github/bin/linux-install-zig
 
       - name: Install Nim
         uses: iffy/install-nim@1ab2fcc1d8294b3956d5696f45cd470c9fe69466
@@ -50,4 +58,12 @@ jobs:
         run: nimble --accept install --depsOnly
 
       - name: Run our test suite
-        run: nimble test
+        env:
+          ARCH: ${{ matrix.arch }}
+        shell: bash
+        run: |
+          if [[ "${ARCH}" == 'cross-compile' ]]; then
+            nimble test -d:zig
+          else
+            nimble test
+          fi
