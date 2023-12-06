@@ -1,0 +1,18 @@
+name: PSScriptAnalyzer
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  PSScriptAnalyzer:
+    name: Run PSScriptAnalyzer on PowerShell scripts
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+
+      - name: Run PSScriptAnalyzer
+        uses: microsoft/psscriptanalyzer-action@6b2948b1944407914a58661c49941824d149734f
+        with:
+          path: .\
+          recurse: true
+          output: results.sarif
